@@ -1,12 +1,22 @@
+// src/users/users.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
-import { User } from './user.entity';
+import { BullModule } from '@nestjs/bull';
+import { CacheModule } from '@nestjs/cache-manager'; // Import CacheModule
+import { UsersController } from './controllers/users.controller';
+import { UsersService } from './services/users.service';
+import { UsersProcessor } from './processors/users.processors';
+import { User } from './entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])], // Register the User entity
-  providers: [UsersService],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    BullModule.registerQueue({
+      name: 'user-status',
+    }),
+    CacheModule.register(), // Add CacheModule here
+  ],
   controllers: [UsersController],
+  providers: [UsersService, UsersProcessor],
 })
 export class UsersModule {}
