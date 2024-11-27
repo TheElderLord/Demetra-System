@@ -6,7 +6,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { User } from '../entities/user.entity';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { CACHE_MANAGER } from '@nestjs/cache-manager'; // Updated import
+import { CACHE_MANAGER } from '@nestjs/cache-manager'; 
 import { Cache } from 'cache-manager';
 
 @Injectable()
@@ -30,7 +30,7 @@ export class UsersService {
     const user = this.userRepository.create(dto);
     await this.userRepository.save(user);
 
-    // Add a job to update status after 10 seconds
+  
     await this.userQueue.add(
       'update-status',
       { userId: user.id },
@@ -60,5 +60,8 @@ export class UsersService {
   async getUsers(): Promise<User[]>{
     const users = await this.userRepository.find();
     return users;
+  }
+  async findByEmail(email: string): Promise<User | null> {
+    return await this.userRepository.findOne({ where: { email } });
   }
 }

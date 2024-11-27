@@ -5,7 +5,7 @@ import { BullModule } from '@nestjs/bull';
 import { CacheModule } from '@nestjs/cache-manager';
 import { UsersModule } from './users/users.module';
 import { cacheManagerStore } from 'cache-manager-ioredis';
-import { ProxyService } from './proxy/proxy.service';
+import { ProxyModule } from './proxy/proxy.module';
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { ProxyService } from './proxy/proxy.service';
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
         entities: [__dirname + '/**/*.entity.{js,ts}'],
-        synchronize: true, // Set to false in production
+        synchronize: true, 
       }),
       inject: [ConfigService],
     }),
@@ -47,11 +47,11 @@ import { ProxyService } from './proxy/proxy.service';
         store: cacheManagerStore,
         host: configService.get<string>('REDIS_HOST'),
         port: configService.get<number>('REDIS_PORT'),
-        ttl: 1800, // Default cache TTL (30 minutes)
+        ttl: 1800, 
       }),
     }),
     UsersModule,
+    ProxyModule,
   ],
-  providers: [ProxyService],
 })
-export class AppModule {}
+export class AppModule { }

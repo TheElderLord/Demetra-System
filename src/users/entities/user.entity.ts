@@ -14,7 +14,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Exclude() // This will exclude the password when serializing
+  @Exclude() 
   @Column()
   password: string;
 
