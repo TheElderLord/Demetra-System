@@ -5,6 +5,7 @@ import { BullModule } from '@nestjs/bull';
 import { CacheModule } from '@nestjs/cache-manager';
 import { UsersModule } from './users/users.module';
 import { cacheManagerStore } from 'cache-manager-ioredis';
+import { ProxyService } from './proxy/proxy.service';
 
 @Module({
   imports: [
@@ -51,5 +52,6 @@ import { cacheManagerStore } from 'cache-manager-ioredis';
     }),
     UsersModule,
   ],
+  providers: [ProxyService],
 })
 export class AppModule {}
