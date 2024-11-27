@@ -10,7 +10,6 @@ import { User } from '../entities/user.entity';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -30,14 +29,7 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('/:id')
   async getUserById(@Param("id") id: number) {
-    const cacheKey = `user:${id}`;
-    let cachedUser: User = await this.cacheManager.get(cacheKey);
-    if (cachedUser) {
-      return { statusCode: 200, message: 'SUCCESS', user: cachedUser };
-    }
-
     const user = await this.usersService.getUserById(+id);
-    await this.cacheManager.set(cacheKey, user, 1800); // Updated TTL parameter
     return { statusCode: 200, message: 'SUCCESS', user };
   }
   
